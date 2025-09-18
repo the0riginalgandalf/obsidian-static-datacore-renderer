@@ -42,10 +42,12 @@ export async function executeBlock(block: BlockInfo, dc: DatacoreApi, tfile?: TF
   try {
     let result;
     if (block.language === 'datacorejs') {
-      console.log("Executing DatacoreJS block. Query content:", block.query);
+      // Normalize line endings to prevent parsing errors on Windows.
+      const normalizedQuery = block.query.replace(/\r\n/g, '\n');
+      console.log("Executing DatacoreJS block. Query content:", normalizedQuery);
       // Create an async function from the user's script, which is a more robust way to execute it.
       const AsyncFunction = Object.getPrototypeOf(async function(){}).constructor;
-      const func = new AsyncFunction('dc', block.query);
+      const func = new AsyncFunction('dc', normalizedQuery);
       result = await func(dc);
     } else {
       result = dc.evaluate(block.query, undefined, tfile?.path);
