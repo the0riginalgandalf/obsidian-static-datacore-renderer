@@ -40,7 +40,13 @@ export function composeBlockContent(block: BlockInfo): string {
 
 export async function executeBlock(block: BlockInfo, dc: DatacoreApi, tfile?: TFile): Promise<string> {
   try {
-    const result = dc.evaluate(block.query, undefined, tfile?.path);
+    let result;
+    if (block.language === 'datacorejs') {
+      // Access the internal 'eval' function for JS execution.
+      result = await (dc as any).core.eval(block.query, { dc });
+    } else {
+      result = dc.evaluate(block.query, undefined, tfile?.path);
+    }
 
     // If the result of the evaluation is already a string (from datacorejs), return it directly.
     if (typeof result === 'string') {
