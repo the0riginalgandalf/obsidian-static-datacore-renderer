@@ -1,0 +1,9 @@
+# Dependencies
+/node_modules
+
+# Build artifacts
+main.js
+main.js.map
+
+# IDE settings
+.vscode/
