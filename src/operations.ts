@@ -38,6 +38,12 @@ export class Operator {
     }
 
     const updatedContent = this.updateContent(content, replacers);
+
+    // If the content has not changed, do not update the editor, to prevent an infinite loop.
+    if (content === updatedContent) {
+      return;
+    }
+
     editor.setValue(updatedContent);
     editor.setCursor(cursor);
   }
