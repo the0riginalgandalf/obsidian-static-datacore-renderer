@@ -42,8 +42,10 @@ export async function executeBlock(block: BlockInfo, dc: DatacoreApi, tfile?: TF
   try {
     let result;
     if (block.language === 'datacorejs') {
-      // Access the internal 'eval' function for JS execution.
-      result = await (dc as any).core.eval(block.query, { dc });
+      // We need to execute the JS in a context where 'dc' is available.
+      // The official API is for live rendering, so we replicate the execution logic.
+      const func = new Function('dc', `return (async () => { ${block.query} })();`);
+      result = await func(dc);
     } else {
       result = dc.evaluate(block.query, undefined, tfile?.path);
     }
