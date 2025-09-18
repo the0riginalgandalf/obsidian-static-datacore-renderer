@@ -53,7 +53,7 @@ export async function executeBlock(block: BlockInfo, dc: DatacoreApi, tfile?: TF
 
 export async function createReplacerFromContent(content: string, dc: DatacoreApi, tfile?: TFile): Promise<Array<Replacer>> {
   const replacers: Replacer[] = [];
-  const blockRegex = /```datacore\n[\s\S]+?---\n[\s\S]*?```/g;
+  const blockRegex = /```datacore(js)?\n[\s\S]+?---\n[\s\S]*?```/g;
   const blocks = content.match(blockRegex);
 
   if (!blocks) {
