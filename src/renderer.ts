@@ -41,6 +41,13 @@ export function composeBlockContent(block: BlockInfo): string {
 export async function executeBlock(block: BlockInfo, dc: DatacoreApi, tfile?: TFile): Promise<string> {
   try {
     const result = dc.evaluate(block.query, undefined, tfile?.path);
+
+    // If the result of the evaluation is already a string (from datacorejs), return it directly.
+    if (typeof result === 'string') {
+      return result;
+    }
+
+    // Otherwise, assume it's a Datacore object and format it.
     // The 'core' property is not in the public API, so we have to cast to any to access it.
     // This is necessary to get the settings for Literals.toString.
     const settings = (dc as any).core.settings;
